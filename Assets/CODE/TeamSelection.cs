@@ -1,20 +1,28 @@
 using UnityEngine;
 using Photon.Pun;
-using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 public class TeamSelection : MonoBehaviourPunCallbacks
 {
-    
-public void blueTeam() 
+    public void BlueTeam()
     {
-    PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "Team" , "blue"} });
-        Debug.Log("mavi takýma katýldýn");
+        SetPlayerTeam("Blue");
+        PhotonNetwork.LoadLevel("GameScene");
     }
 
-    public void redTeam() 
+    public void RedTeam()
     {
-        PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "team", "red" } });
-        Debug.Log("kýrmýzý takýma katidýn");
+        SetPlayerTeam("Red");
+        PhotonNetwork.LoadLevel("GameScene");
+    }
+
+    void SetPlayerTeam(string teamName)
+    {
+        ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable
+        {
+            { "Team", teamName }
+        };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        Debug.Log("Takým ayarlandý: " + teamName);
     }
 }
-

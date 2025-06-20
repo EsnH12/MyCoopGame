@@ -1,22 +1,18 @@
 using UnityEngine;
 using Photon.Pun;
-using Photon.Realtime;
 
 public class PhotonLauncher : MonoBehaviourPunCallbacks
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       PhotonNetwork.ConnectUsingSettings(); // photona baðlan
-        Debug.Log("Photona baðlanýlýyor...");
-
-
+        PhotonNetwork.ConnectUsingSettings();
+        Debug.Log("Photon'a baðlanýlýyor...");
     }
 
-    public override void OnConnectedToMaster()  // photona baðlanýnca otomatik çalýþýr
+    public override void OnConnectedToMaster()
     {
-        Debug.Log("Photona baþarýyla baðlandý");
-        PhotonNetwork.JoinLobby(); // lobiye katilma
+        Debug.Log("Photon'a baþarýyla baðlandý");
+        PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()

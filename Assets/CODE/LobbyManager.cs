@@ -6,33 +6,28 @@ using UnityEngine.UI;
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
     [Header("UI Referansları")]
-    public InputField roomInput;              // Oda ismi yazılacak yer
-    public Text durumyazısı;                  // Durum yazısı
-    public GameObject teamSelectionPanel;     // Takım seçimi paneli
+    public InputField roomInput;
+    public Text durumyazısı;
+    public GameObject teamSelectionPanel;
 
     void Start()
     {
-        // Sunucuya bağlan
         if (!PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.ConnectUsingSettings(); // Photon'a bağlan
+            PhotonNetwork.ConnectUsingSettings();
             durumyazısı.text = "Sunucuya bağlanılıyor...";
         }
 
         PhotonNetwork.AutomaticallySyncScene = true;
-        // Master Client sahne değiştirirse diğer oyuncular da aynı sahneye geçer
     }
 
-    // Oda oluşturma
     public void CreateRoom()
     {
         string roomname = roomInput.text;
 
-        if (roomname != "")
+        if (!string.IsNullOrEmpty(roomname))
         {
-            RoomOptions options = new RoomOptions();
-            options.MaxPlayers = 4;
-
+            RoomOptions options = new RoomOptions { MaxPlayers = 4 };
             PhotonNetwork.CreateRoom(roomname, options);
             durumyazısı.text = "Oda oluşturuluyor...";
         }
@@ -42,39 +37,34 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // Rastgele odaya katıl
     public void JoinRandomRoom()
     {
         PhotonNetwork.JoinRandomRoom();
         durumyazısı.text = "Rastgele odaya katılınıyor...";
     }
 
-    // Oda oluşturulunca çağrılır
     public override void OnCreatedRoom()
     {
-        durumyazısı.text = " Oda kuruldu!";
+        durumyazısı.text = "Oda kuruldu!";
     }
 
-    // Odaya girince çağrılır
     public override void OnJoinedRoom()
     {
-        durumyazısı.text = " Odaya girildi!";
-        teamSelectionPanel.SetActive(true); // Takım seçimi panelini aç
+        durumyazısı.text = "Odaya girildi!";
+        teamSelectionPanel.SetActive(true);
     }
 
-    // Rastgele oda bulunamadığında çağrılır
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        durumyazısı.text = " Oda bulunamadı, yeni bir oda oluşturuluyor...";
+        durumyazısı.text = "Oda bulunamadı, yeni oda oluşturuluyor...";
         string randomRoomName = "oda" + Random.Range(0, 10000);
         PhotonNetwork.CreateRoom(randomRoomName, new RoomOptions { MaxPlayers = 4 });
     }
 
-    // Master server'a bağlandığında çalışır (opsiyonel ama yararlı)
     public override void OnConnectedToMaster()
     {
         durumyazısı.text = "Sunucuya bağlandı!";
-        PhotonNetwork.JoinLobby(); // Lobiye gir
+        PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
